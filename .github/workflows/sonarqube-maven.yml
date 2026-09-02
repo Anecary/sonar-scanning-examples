@@ -1,0 +1,25 @@
+name: SonarQube Maven Analysis
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sonar-analysis:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Maven and SonarQube analysis
+        working-directory: sonar-scanner-maven/maven-basic
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: >
+          mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.projectKey=Test-3-en-repositorio-GitHub
+          -Dsonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          -Dsonar.token="${{ secrets.SONAR_TOKEN }}"
